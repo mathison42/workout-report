@@ -2,7 +2,7 @@
 
 Purpose: Create a Google Sheet wrapper for Workout Report Tool
 
-To-Do List:
+### Immediate To-Do List:
 - [ ] Create Basic Runner Script
 	- [ ] Simple OAuth
 	- [ ] Simple Get
@@ -20,7 +20,7 @@ To-Do List:
 	- [ ] Build
 	- [ ] Test
 	
-Future:
+### Future To-Do List:
 - [ ] Create Organized Workout Spreadsheet
 	- [ ] Create Spreadsheet
 	- [ ] Single (Giant) Spreadsheet - Workout X-Axis: {Dumbell {0:{10:25lbs, 10:25lbs, 8:30lbs} | Date Y-Axis 

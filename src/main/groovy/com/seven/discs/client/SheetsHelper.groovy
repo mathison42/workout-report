@@ -1,3 +1,5 @@
+package com.seven.discs.client
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -12,10 +14,17 @@ import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.*;
 import com.google.api.services.sheets.v4.Sheets;
 
-// Create Jersey Client
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
 
-// Intialize Jersey Client with rest call
-
-// Run REST API call
-
-// Print to screen
+public class SheetsHelper {
+	
+	public SheetsHelper(String url) {
+	}
+	
+	public SheetsHelper(String url, String username, String password) {
+	}
+}
