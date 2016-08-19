@@ -1,6 +1,7 @@
 apply plugin: 'groovy'
+apply plugin: 'application'
 
-defaultTasks 'build'
+mainClassName='Runner'
 
 repositories {
     mavenCentral()
@@ -16,56 +17,5 @@ dependencies {
 	// Test Dependencies
 	testCompile 'junit:junit:4.11'
 	testCompile 'org.hamcrest:hamcrest-core:1.3'
-}
-
-configurations {
-    // Remove the groovy-all jar from runtime dependencies
-    runtime.exclude module: 'groovy-all'
-}
-
-sourceSets {
-    main {
-        groovy {
-            srcDirs = ['src/main/groovy']
-        }
-		resources {
-			srcDirs = [ 'src/main/resources']
-		}
-    }
-}
-
-task copyDependencies(type: Copy) {
-    from configurations.runtime
-    into 'lib'
-}
-
-task copyCredentials(type: Copy) {
-    from sourceSets.main.resources.srcDirs
-    into 'resources'
-}
-
-task build(type:Zip) {
-    from(sourceSets.main.groovy.srcDirs)
-    into('lib') {
-        from copyDependencies
-    }
-
-    into('resources') {
-        from sourceSets.main.resources.srcDirs
-    }
-}
-
-task run(type: JavaExec) {
-	description 'Run Runner Script...'
 	
-	// Set main property to name of Groovy script class.
-	main = 'runner'
-	
-    // Set classpath for running the Groovy script.
-	classpath = sourceSets.main.runtimeClasspath
-	
-	// if (project.hasProperty('custom')) {
-    //    // Pass command-line argument to script.
-    //    args project.getProperty('custom')
-    //}
 }

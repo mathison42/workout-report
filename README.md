@@ -2,11 +2,15 @@
 
 Purpose: Create a Google Sheet wrapper for Workout Report Tool
 
+### Run
+	gradle -q run
+	
 ### Immediate To-Do List:
 - [ ] Create Basic Runner Script
-	- [ ] Simple OAuth
-	- [ ] Simple Get
-	- [ ] Simple Post
+	- [x] Simple OAuth
+	- [x] Simple Get
+	- [x] Simple Post
+	- [ ] Clean Up
 - [ ] Create Sheets Wrapper Classes
 	- [ ] Authorization Class
 	- [ ] Spreadsheet Creation Class
