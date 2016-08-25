@@ -23,39 +23,42 @@ import java.util.List;
 import com.seven.discs.client.SheetsQuickstart
 
 public class RunnerHelper {
+
 	/** Application name. */
-	private static final String APPLICATION_NAME = "Wrapper Test";
-	
+	private final String APPLICATION_NAME;
+
 	/** Directory to store user credentials for this application. */
-	private static final java.io.File DATA_STORE_DIR = new java.io.File(
-		System.getProperty("user.home"), ".credentials/sheets.googleapis.com-groovy-wrapper-test.json");
-	
+	private final java.io.File DATA_STORE_DIR
+
 	/** Global instance of the {@link FileDataStoreFactory}. */
 	private static FileDataStoreFactory DATA_STORE_FACTORY;
-	
+
 	/** Global instance of the JSON factory. */
 	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-	
+
 	/** Global instance of the HTTP transport. */
 	private static HttpTransport HTTP_TRANSPORT;
-	
+
 	/** Global instance of the scopes required by this quickstart.
 	*
 	* If modifying these scopes, delete your previously saved credentials
-	* at ~/.credentials/sheets.googleapis.com-groovy-wrapper-test.json
+	* at ${DATA_STORE_DIR}
 	*/
 	private static final List<String> SCOPES = Arrays.asList(SheetsScopes.SPREADSHEETS);
-	
-	static {
-		try {
-			HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-			DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
-		} catch (Throwable t) {
-			t.printStackTrace();
-			System.exit(1);
+
+		public RunnerHelper(APPLICATION_NAME, DATA_STORE_DIR) {
+			this.APPLICATION_NAME = APPLICATION_NAME
+			this.DATA_STORE_DIR = new java.io.File(
+				System.getProperty("user.home"), DATA_STORE_DIR);
+
+			try {
+				this.HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+				this.DATA_STORE_FACTORY = new FileDataStoreFactory(this.DATA_STORE_DIR);
+			} catch (Throwable t) {
+				t.printStackTrace();
+				System.exit(1);
+			}
 		}
-	}
-	
 	//////////////////////////////////////////
 	// Create Google Auth Client
 	//////////////////////////////////////////
@@ -69,7 +72,7 @@ public class RunnerHelper {
 		InputStream input = SheetsQuickstart.class.getResourceAsStream("/client_secret.json");
 		GoogleClientSecrets clientSecrets =
 			GoogleClientSecrets.load(this.JSON_FACTORY, new InputStreamReader(input));
-	
+
 		// Build flow and trigger user authorization request.
 		GoogleAuthorizationCodeFlow flow =
 				new GoogleAuthorizationCodeFlow.Builder(
@@ -83,7 +86,7 @@ public class RunnerHelper {
 				"Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
 		return credential;
 	}
-	
+
 	/**
 	* Build and return an authorized Sheets API client service.
 	* @return an authorized Sheets API client service
@@ -94,5 +97,5 @@ public class RunnerHelper {
 		return new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
 				.setApplicationName(APPLICATION_NAME)
 				.build();
-	}	
+	}
 }
