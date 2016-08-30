@@ -3,7 +3,7 @@
 Purpose: Create a Google Sheet wrapper for Workout Report Tool
 
 ### Build
-  gradle build
+	  gradle build
 
 ### Run
     gradle -q run
