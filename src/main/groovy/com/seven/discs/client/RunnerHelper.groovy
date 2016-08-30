@@ -20,8 +20,6 @@ import java.io.InputStreamReader
 import java.util.Arrays
 import java.util.List
 
-import com.seven.discs.client.SheetsQuickstart
-
 public class RunnerHelper {
 
   /** Application name. */
@@ -46,19 +44,19 @@ public class RunnerHelper {
   */
   private static final List<String> SCOPES = Arrays.asList(SheetsScopes.SPREADSHEETS)
 
-    public RunnerHelper(APPLICATION_NAME, DATA_STORE_DIR) {
-      this.APPLICATION_NAME = APPLICATION_NAME
-      this.DATA_STORE_DIR = new java.io.File(
-        System.getProperty("user.home"), DATA_STORE_DIR)
+  public RunnerHelper(String APPLICATION_NAME, String DATA_STORE_DIR) {
+    this.APPLICATION_NAME = APPLICATION_NAME
+    this.DATA_STORE_DIR = new java.io.File(
+      System.getProperty("user.home"), DATA_STORE_DIR)
 
-      try {
-        this.HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport()
-        this.DATA_STORE_FACTORY = new FileDataStoreFactory(this.DATA_STORE_DIR)
-      } catch (Throwable t) {
-        t.printStackTrace()
-        System.exit(1)
-      }
+    try {
+      this.HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport()
+      this.DATA_STORE_FACTORY = new FileDataStoreFactory(this.DATA_STORE_DIR)
+    } catch (Throwable t) {
+      t.printStackTrace()
+      System.exit(1)
     }
+  }
   //////////////////////////////////////////
   // Create Google Auth Client
   //////////////////////////////////////////

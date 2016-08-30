@@ -16,10 +16,13 @@ Purpose: Create a Google Sheet wrapper for Workout Report Tool
   - [x] Clean Up
   - [x] Short Summary on how to use Runner.groovy
 - [ ] Create Sheets Wrapper Classes
-  - [ ] Authorization Class
+  - [x] Authorization Class
   - [ ] Spreadsheet Creation Class
-  - [ ] Retrieval Class
-  - [ ] Post Class
+		- [x] Create Blank Spreadsheet
+		- [ ] Create Generic Template
+  - [ ] Get and Post Class
+		- [ ] Single Values
+		- [ ] Batch Values
 - [ ] First JUnit Test
   - [ ] Create First Basic Class Tests
   - [ ] Set Gradle Compile Test
