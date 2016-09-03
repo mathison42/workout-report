@@ -20,18 +20,28 @@ import java.util.ArrayList;
 
 public class SheetInstance extends SpreadsheetInstance {
 
-  private String sheetId;
+  private Sheet sheet;
+
   public SheetInstance(Sheets service) {
     super(service);
-    this.sheetId = createSheet();
+    this.sheet = createSheet();
+    addSheet(sheet);
   }
 
   public SheetInstance(Sheets service, Spreadsheet spreadsheet){
     super(service, spreadsheet);
-    this.sheetId = createSheet();
+    this.sheet = createSheet();
+    addSheet(sheet);
   }
 
-  private String createSheet() {
+  // Only meant for the first Tab created automagically by SpreadSheet Create()
+  public SheetInstance(Sheets service, Spreadsheet spreadsheet, Sheet sheet) {
+    super(service, spreadsheet);
+    this.sheet = sheet;
+  }
+
+  private Sheet createSheet() {
+    Sheet result = new Sheet();
     List<Request> requests = new ArrayList<>();
     requests.add(new Request()
       .setAddSheet(new AddSheetRequest()
@@ -52,13 +62,27 @@ public class SheetInstance extends SpreadsheetInstance {
     BatchUpdateSpreadsheetRequest update =
             new BatchUpdateSpreadsheetRequest().setRequests(requests);
     try {
-      System.out.println(getSheets().spreadsheets().batchUpdate(
-          getSpreadsheet().getSpreadsheetId(), update).execute());
+        BatchUpdateSpreadsheetResponse response =
+         getService().spreadsheets().batchUpdate(getSpreadsheet().getSpreadsheetId(), update).execute();
+         List<Response> replies = response.getReplies();
+         AddSheetResponse sheetResponse = replies.get(0).getAddSheet();
+         SheetProperties props = sheetResponse.getProperties();
+         result.setProperties(props);
+         System.out.println("Result: " + result);
+         System.out.println("Props: " + props);
     }
     catch (IOException io) {
       io.printStackTrace();
       System.exit(1);
     }
-    return "success";
+    return result;
+  }
+
+  public Sheet getSheet() {
+    return sheet;
+  }
+
+  public int getSheetId() {
+    return sheet.getProperties().getSheetId();
   }
 }

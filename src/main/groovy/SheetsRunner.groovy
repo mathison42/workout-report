@@ -17,6 +17,7 @@ public class SheetsRunner {
       service = sa.getSheetsService()
       SpreadsheetInstance ssi = new SpreadsheetInstance(service)
       SheetInstance si = new SheetInstance(service, ssi.getSpreadsheet())
+      println ssi.getSheets()
       //SheetInstance newSi = new SheetInstance(service)
       println "...[End]"
     }

@@ -15,6 +15,7 @@ import com.google.api.services.sheets.v4.model.*;
 import com.google.api.services.sheets.v4.Sheets;
 
 import java.io.IOException;
+import java.util.List;
 
 public class SpreadsheetInstance {
 
@@ -34,6 +35,11 @@ public class SpreadsheetInstance {
   private Spreadsheet createSpreadsheet() {
     Spreadsheet result = new Spreadsheet();
     Spreadsheet genericTemplate = new Spreadsheet();
+    genericTemplate.setProperties(new SpreadsheetProperties()
+      .setTitle("My Workout Spreadsheet")
+      .setLocale("en_US")
+    );
+
     try {
       result = service.spreadsheets().create(genericTemplate).execute();
     }
@@ -44,12 +50,32 @@ public class SpreadsheetInstance {
     return result;
   }
 
-  public void setSheets(Sheets service) {
+  public void setService(Sheets service) {
     this.service = service;
   }
 
-  public Sheets getSheets() {
+  public Sheets getService() {
    return service;
+  }
+
+  public void setSheets(List<Sheet> paramList) {
+    spreadsheet.setSheets(paramList);
+  }
+
+  public List<Sheet> getSheets() {
+   return spreadsheet.getSheets();
+  }
+
+  public void addSheet(Sheet sheet) {
+   List<Sheet> sheets = getSheets();
+   sheets.add(sheet);
+   setSheets(sheets);
+  }
+
+  public void removeSheet(Sheet sheet) {
+    List<Sheet> sheets = getSheets();
+    sheets.remove(sheet);
+    setSheets(sheets);
   }
 
   public void setSpreadsheet(Spreadsheet spreadsheet) {
