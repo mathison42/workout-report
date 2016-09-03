@@ -3,6 +3,7 @@ import com.google.api.services.sheets.v4.Sheets
 
 import com.seven.discs.client.SheetsAuthenticator
 import com.seven.discs.client.SpreadsheetInstance
+import com.seven.discs.client.SheetInstance
 
 
 public class SheetsRunner {
@@ -15,7 +16,8 @@ public class SheetsRunner {
       SheetsAuthenticator sa = new SheetsAuthenticator(Application_Name, Data_Store_Dir)
       service = sa.getSheetsService()
       SpreadsheetInstance ssi = new SpreadsheetInstance(service)
-
+      SheetInstance si = new SheetInstance(service, ssi.getSpreadsheet())
+      //SheetInstance newSi = new SheetInstance(service)
       println "...[End]"
     }
 }

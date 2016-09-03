@@ -23,7 +23,7 @@ public class SpreadsheetInstance {
 
   public SpreadsheetInstance(Sheets service) {
     this.service = service;
-    createSpreadsheet();
+    this.spreadsheet = createSpreadsheet();
   }
 
   public SpreadsheetInstance(Sheets service, Spreadsheet spreadsheet) {
@@ -31,15 +31,17 @@ public class SpreadsheetInstance {
     this.spreadsheet = spreadsheet;
   }
 
-  private void createSpreadsheet() {
+  private Spreadsheet createSpreadsheet() {
+    Spreadsheet result = new Spreadsheet();
     Spreadsheet genericTemplate = new Spreadsheet();
     try {
-      this.spreadsheet = service.spreadsheets().create(genericTemplate).execute();
+      result = service.spreadsheets().create(genericTemplate).execute();
     }
     catch (IOException io) {
       io.printStackTrace();
       System.exit(1);
     }
+    return result;
   }
 
   public void setSheets(Sheets service) {
