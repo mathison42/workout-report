@@ -24,29 +24,22 @@ public class SheetInstance extends SpreadsheetInstance {
 
   public SheetInstance(Sheets service) {
     super(service);
-    this.sheet = createSheet();
-    addSheet(sheet);
   }
 
   public SheetInstance(Sheets service, Spreadsheet spreadsheet){
     super(service, spreadsheet);
-    this.sheet = createSheet();
-    addSheet(sheet);
   }
 
-  // Only meant for the first Tab created automagically by SpreadSheet Create()
   public SheetInstance(Sheets service, Spreadsheet spreadsheet, Sheet sheet) {
     super(service, spreadsheet);
     this.sheet = sheet;
   }
 
-  private Sheet createSheet() {
-    Sheet result = new Sheet();
-    List<Request> requests = new ArrayList<>();
-    requests.add(new Request()
+  public Sheet createSheet() {
+    Request tempReq = new Request()
       .setAddSheet(new AddSheetRequest()
         .setProperties(new SheetProperties()
-          .setTitle("Workout")
+          .setTitle("Blank Tab")
           .setGridProperties(new GridProperties()
             .setRowCount(20)
             .setColumnCount(12)
@@ -57,8 +50,14 @@ public class SheetInstance extends SpreadsheetInstance {
             .setBlue((float)0.4)
           )
         )
-      )
-    );
+      );
+    return createSheet(tempReq);
+  }
+
+  public Sheet createSheet(Request request) {
+    Sheet result = new Sheet();
+    List<Request> requests = new ArrayList<>();
+    requests.add(request);
     BatchUpdateSpreadsheetRequest update =
             new BatchUpdateSpreadsheetRequest().setRequests(requests);
     try {
@@ -75,7 +74,24 @@ public class SheetInstance extends SpreadsheetInstance {
       io.printStackTrace();
       System.exit(1);
     }
+
+    addSheet(result);
     return result;
+  }
+
+  // Update Sheet Data is not given to List<Sheet> of Spreadsheet
+  public void updateSheet(Request request) {
+    List<Request> requests = new ArrayList<>();
+    requests.add(request);
+    BatchUpdateSpreadsheetRequest update =
+            new BatchUpdateSpreadsheetRequest().setRequests(requests);
+    try {
+        getService().spreadsheets().batchUpdate(getSpreadsheet().getSpreadsheetId(), update).execute();
+    }
+    catch (IOException io) {
+      io.printStackTrace();
+      System.exit(1);
+    }
   }
 
   public Sheet getSheet() {
