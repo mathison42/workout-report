@@ -21,6 +21,8 @@ import java.util.List;
 public class SheetInstance extends SpreadsheetInstance {
 
   private int sheetId;
+  private List<Object> xAxis = new ArrayList<Object>();
+  private List<Object> yAxis = new ArrayList<Object>();
 
   public SheetInstance(Sheets service) {
     super(service);
@@ -59,6 +61,14 @@ public class SheetInstance extends SpreadsheetInstance {
     return getSheet().getProperties().getTitle();
   }
 
+  public List<Object> getXAxis() {
+    return this.xAxis;
+  }
+
+  public List<Object> getYAxis() {
+    return this.yAxis;
+  }
+
   public Sheet createSheet() {
     Request tempReq = new Request()
       .setAddSheet(new AddSheetRequest()
@@ -86,7 +96,9 @@ public class SheetInstance extends SpreadsheetInstance {
             new BatchUpdateSpreadsheetRequest().setRequests(requests);
     try {
         BatchUpdateSpreadsheetResponse response =
-         getService().spreadsheets().batchUpdate(getSpreadsheet().getSpreadsheetId(), update).execute();
+         getService().spreadsheets()
+         .batchUpdate(getSpreadsheet().getSpreadsheetId(), update)
+         .execute();
          List<Response> replies = response.getReplies();
          AddSheetResponse sheetResponse = replies.get(0).getAddSheet();
          SheetProperties props = sheetResponse.getProperties();
@@ -105,17 +117,65 @@ public class SheetInstance extends SpreadsheetInstance {
 
   // Update Sheet Data is not given to List<Sheet> of Spreadsheet
   // Should confirm that "Sheet" is !null
-  public void updateSheet(Request request) {
+  public BatchUpdateSpreadsheetResponse updateSheet(Request request) {
+    BatchUpdateSpreadsheetResponse result = new BatchUpdateSpreadsheetResponse();
     List<Request> requests = new ArrayList<>();
     requests.add(request);
     BatchUpdateSpreadsheetRequest update =
             new BatchUpdateSpreadsheetRequest().setRequests(requests);
     try {
-        getService().spreadsheets().batchUpdate(getSpreadsheet().getSpreadsheetId(), update).execute();
+        result = getService().spreadsheets()
+          .batchUpdate(getSpreadsheet()
+          .getSpreadsheetId(), update)
+          .execute();
     }
     catch (IOException io) {
       io.printStackTrace();
       System.exit(1);
     }
+    return result;
+  }
+
+  public void setAxises() {
+    BatchGetRanges payload = new BatchGetRanges();
+    payload.getXAxisHeader(getTitle());
+    payload.getYAxisHeader(getTitle());
+    BatchGetValuesResponse response = batchGetValues(payload.getRanges());
+    this.xAxis = response.getValueRanges().get(0).getValues().get(0);
+    List<List<Object>> tempY = response.getValueRanges().get(1).getValues();
+    Object header;
+    for (List<Object> temp : tempY) {
+      header = "";
+      if(temp.size() > 0 ) {
+        header = temp.get(0);
+      }
+      this.yAxis.add(header);
+    }
+  }
+
+  public String getLastXIndex() {
+    return convertIndex2Column(getXAxis().size());
+  }
+
+  public int getLastYIndex() {
+    return getYAxis().size();
+  }
+
+  private String convertIndex2Column(int index) {
+    String result = "";
+    int resultInt = getXAxis().size() - 1;
+    int remainder;
+    int net;
+    while (resultInt >= 0) {
+      remainder = resultInt % 26;
+      result = getNumber2Char(remainder) + result;
+      net = resultInt - remainder;
+      resultInt = net / 26 - 1;
+    }
+    return result;
+  }
+
+  private String getNumber2Char(int i) {
+      return i > -1 && i < 26 ? String.valueOf((char)(i + 65)) : null;
   }
 }

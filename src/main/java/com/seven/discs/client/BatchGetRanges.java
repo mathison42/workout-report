@@ -15,30 +15,40 @@ import com.google.api.services.sheets.v4.model.*;
 import com.google.api.services.sheets.v4.Sheets;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-public final class DateHelper {
+public class BatchGetRanges {
 
-  static SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yyyy");
+  private List<String> ranges;
 
-  public static List<String> getNextXDates(int number) {
-    List<String> result = new ArrayList<String>();
-    Calendar cal = Calendar.getInstance();
-    for (int i = 0; i < number; i++) {
-      cal.add(Calendar.DATE, 1);
-      result.add(sdf.format(cal.getTime()).toString());
-    }
-    return result;
+  public BatchGetRanges() {
+    this.ranges = new ArrayList<String>();
   }
 
-  public static String getTodaysDate() {
-    String result;
-    Calendar cal = Calendar.getInstance();
-    result = sdf.format(cal.getTime()).toString();
-    return result;
+  public List<String> getRanges() {
+    return ranges;
+  }
+
+  public void addRange(String range) {
+    ranges.add(range);
+  }
+
+  public void addRange(List<String> ranges) {
+    ranges.addAll(ranges);
+  }
+
+  public void setRanges(List<String> ranges) {
+    this.ranges = ranges;
+  }
+
+  public void getXAxisHeader(String sheetName) {
+    String range = sheetName + "!1:1";
+    addRange(range);
+  }
+
+  public void getYAxisHeader(String sheetName) {
+    String range = sheetName + "!A:A";
+    addRange(range);
   }
 }

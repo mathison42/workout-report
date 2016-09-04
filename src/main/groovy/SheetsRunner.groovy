@@ -21,7 +21,7 @@ public class SheetsRunner {
       // SpreadsheetInstance ssi = new SpreadsheetInstance(service)
       // SheetInstance si = new SheetInstance(service, ssi.getSpreadsheet())
       // println ssi.getSheets()
-      //SheetInstance newSi = new SheetInstance(service)
+      // SheetInstance newSi = new SheetInstance(service)
       println "Values: " + SheetTemplate.values();
 
       // Create First Page of new Spreadsheet
@@ -48,7 +48,20 @@ public class SheetsRunner {
       vals.createXAxisHeader(si3.getTitle(), ["Dumbbell Lunges", "Back Squat", "Front Squat"]);
       vals.createYAxisHeader(si3.getTitle(), DateHelper.getNextXDates(30));
       vals.setValueRange2Request();
-      si1.updateValues(vals.getRequest());
+      si1.batchUpdateValues(vals.getRequest());
+
+      si1.setAxises();
+      si2.setAxises();
+      si3.setAxises();
+      println "SI1: X: " + si1.getXAxis().toString();
+      println "SI1: Y: " + si1.getYAxis().toString();
+
+      println si1.getLastXIndex();
+      println si1.getLastYIndex();
+      println si2.getLastXIndex();
+      println si2.getLastYIndex();
+      println si3.getLastXIndex();
+      println si3.getLastYIndex();
       println "...[End]"
     }
-}
+  }

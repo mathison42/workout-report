@@ -70,15 +70,15 @@ public class SpreadsheetInstance {
   public void updateSheets() {
     List<Sheet> sheetList = new ArrayList<Sheet>();
     try {
-        Spreadsheet s = getService().spreadsheets().get(getSpreadsheet().getSpreadsheetId()).setFields("sheets").execute();
+        Spreadsheet s = getService().spreadsheets()
+          .get(getSpreadsheet().getSpreadsheetId())
+          .setFields("sheets")
+          .execute();
         sheetList = s.getSheets();
     }
     catch (IOException io) {
       io.printStackTrace();
       System.exit(1);
-    }
-    for (Sheet i : sheetList) {
-      System.out.println("Full: " + i.getProperties());
     }
     setSheets(sheetList);
   }
@@ -119,20 +119,67 @@ public class SpreadsheetInstance {
    return spreadsheet;
   }
 
-  // Update Values within a Spreadsheet
-  public void updateValues(BatchUpdateValuesRequest update) {
+  public ValueRange getValues(String range) {
+    ValueRange result = new ValueRange();
     try {
-      BatchUpdateValuesResponse response = getService().spreadsheets().values()
-          .batchUpdate(getSpreadsheet().getSpreadsheetId(), update)
-          .execute();
-      for (UpdateValuesResponse temp : response.getResponses()) {
-        System.out.println ("Response: " + temp);
-      }
+      result = service.spreadsheets().values()
+            .get(getSpreadsheet().getSpreadsheetId(), range)
+            .execute();
     }
     catch (IOException io) {
       io.printStackTrace();
       System.exit(1);
     }
+    return result;
+  }
+
+  // Get Values within a Spreadsheet
+  public BatchGetValuesResponse batchGetValues(List<String> ranges) {
+    BatchGetValuesResponse result = new BatchGetValuesResponse();
+    try {
+      result = service.spreadsheets().values()
+            .batchGet(getSpreadsheet().getSpreadsheetId())
+            .setRanges(ranges)
+            .execute();
+    }
+    catch (IOException io) {
+      io.printStackTrace();
+      System.exit(1);
+    }
+    return result;
+  }
+
+  public UpdateValuesResponse updateValues(String range, ValueRange valueRange) {
+    UpdateValuesResponse result = new UpdateValuesResponse();
+    try {
+      result = service.spreadsheets().values()
+            .update(getSpreadsheet().getSpreadsheetId(), range, valueRange)
+            .setValueInputOption("RAW")
+            .execute();
+    }
+    catch (IOException io) {
+      io.printStackTrace();
+      System.exit(1);
+    }
+    return result;
+  }
+
+  // Update Values within a Spreadsheet
+  public BatchUpdateValuesResponse batchUpdateValues(BatchUpdateValuesRequest update) {
+    BatchUpdateValuesResponse result = new BatchUpdateValuesResponse();
+    try {
+      result = getService().spreadsheets().values()
+          .batchUpdate(getSpreadsheet().getSpreadsheetId(), update)
+          .execute();
+      // for (UpdateValuesResponse temp : response.getResponses()) {
+      //   System.out.println ("Response: " + temp);
+      // }
+    }
+    catch (IOException io) {
+      io.printStackTrace();
+      System.exit(1);
+    }
+    return result;
   }
 
 }

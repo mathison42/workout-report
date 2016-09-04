@@ -49,23 +49,25 @@ public class BatchUpdateValues {
   }
 
   public void createXAxisHeader(String sheetName, List<Object> header) {
-    ValueRange result = new ValueRange();
-    result.setMajorDimension("ROWS");
     String range = sheetName + "!B1:1";
-    result.setRange(range);
     List<List<Object>> data = new ArrayList<List<Object>>();
     data.add(header);
+
+    ValueRange result = new ValueRange();
+    result.setMajorDimension("ROWS");
+    result.setRange(range);
     result.setValues(data);
     add2ValueRange(result);
   }
 
   public void createYAxisHeader(String sheetName, List<Object> header) {
-    ValueRange result = new ValueRange();
-    result.setMajorDimension("COLUMNS");
     String range = sheetName + "!A2:A";
-    result.setRange(range);
     List<List<Object>> data = new ArrayList<List<Object>>();
     data.add(header);
+
+    ValueRange result = new ValueRange();
+    result.setMajorDimension("COLUMNS");
+    result.setRange(range);
     result.setValues(data);
     add2ValueRange(result);
   }
