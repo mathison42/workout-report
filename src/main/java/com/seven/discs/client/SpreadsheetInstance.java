@@ -15,6 +15,7 @@ import com.google.api.services.sheets.v4.model.*;
 import com.google.api.services.sheets.v4.Sheets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SpreadsheetInstance {
@@ -63,13 +64,45 @@ public class SpreadsheetInstance {
   }
 
   public List<Sheet> getSheets() {
-   return spreadsheet.getSheets();
+    return spreadsheet.getSheets();
+  }
+
+  public void updateSheets() {
+    List<Sheet> sheetList = new ArrayList<Sheet>();
+    try {
+        Spreadsheet s = getService().spreadsheets().get(getSpreadsheet().getSpreadsheetId()).setFields("sheets").execute();
+        sheetList = s.getSheets();
+    }
+    catch (IOException io) {
+      io.printStackTrace();
+      System.exit(1);
+    }
+    for (Sheet i : sheetList) {
+      System.out.println("Full: " + i.getProperties());
+    }
+    setSheets(sheetList);
   }
 
   public void addSheet(Sheet sheet) {
-   List<Sheet> sheets = getSheets();
-   sheets.add(sheet);
-   setSheets(sheets);
+    int sheetId = sheet.getProperties().getSheetId();
+    int i = 0;
+    boolean found = false;
+    List<Sheet> sheets = getSheets();
+    // Replace if it exists in our local list
+    for (Sheet temp : sheets) {
+      if (temp.getProperties().getSheetId() == sheetId) {
+        sheets.set(i,sheet);
+        found = true;
+        break;
+      }
+      i++;
+    }
+
+    // If it doesn't exist in our local list, add it.
+    if (!found) {
+      sheets.add(sheet);
+    }
+    setSheets(sheets);
   }
 
   public void removeSheet(Sheet sheet) {
@@ -85,4 +118,21 @@ public class SpreadsheetInstance {
   public Spreadsheet getSpreadsheet() {
    return spreadsheet;
   }
+
+  // Update Values within a Spreadsheet
+  public void updateValues(BatchUpdateValuesRequest update) {
+    try {
+      BatchUpdateValuesResponse response = getService().spreadsheets().values()
+          .batchUpdate(getSpreadsheet().getSpreadsheetId(), update)
+          .execute();
+      for (UpdateValuesResponse temp : response.getResponses()) {
+        System.out.println ("Response: " + temp);
+      }
+    }
+    catch (IOException io) {
+      io.printStackTrace();
+      System.exit(1);
+    }
+  }
+
 }

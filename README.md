@@ -19,11 +19,12 @@ Purpose: Create a Google Sheet wrapper for Workout Report Tool
   - [x] Authorization Class
   - [ ] Spreadsheet Creation Class
 		- [x] Create Blank Spreadsheet
-			- [ ] Spreadsheet Template 1 - Days "Checked In"
+			- [x] Spreadsheet Template 1 - Days "Checked In"
 		- [x] Create Blank Tab
-		- [ ] Create Generic Templates
-			- [ ] Sheet Template 1 - Exercise x Date
-			- [ ] Sheet Template 2* - Tab 1: Day 1 x Date. Tab 2: Day 2 x Date...
+		- [x] Create Generic Templates
+			- [x] Sheet Template 1 - Exercise x Date
+			- [x] Sheet Template 2* - Tab 1: Day 1 x Date. Tab 2: Day 2 x Date...
+		- [ ] Clean
   - [ ] Get and Post Class
 		- [ ] Single Values
 		- [ ] Batch Values

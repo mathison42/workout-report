@@ -15,12 +15,12 @@ import com.google.api.services.sheets.v4.model.*;
 import com.google.api.services.sheets.v4.Sheets;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SheetInstance extends SpreadsheetInstance {
 
-  private Sheet sheet;
+  private int sheetId;
 
   public SheetInstance(Sheets service) {
     super(service);
@@ -30,9 +30,33 @@ public class SheetInstance extends SpreadsheetInstance {
     super(service, spreadsheet);
   }
 
-  public SheetInstance(Sheets service, Spreadsheet spreadsheet, Sheet sheet) {
+  public SheetInstance(Sheets service, Spreadsheet spreadsheet, int sheetId) {
     super(service, spreadsheet);
-    this.sheet = sheet;
+    this.sheetId = sheetId;
+  }
+
+  public Sheet getSheet() {
+    Sheet result = new Sheet();
+    for (Sheet sheet : getSheets()) {
+      SheetProperties props = sheet.getProperties();
+      if (props.getSheetId() == sheetId) {
+        result = sheet;
+        break;
+      }
+    }
+    return result;
+  }
+
+  public int getSheetId() {
+    return sheetId;
+  }
+
+  public void setSheetId(int sheetId) {
+    this.sheetId = sheetId;
+  }
+
+  public String getTitle() {
+    return getSheet().getProperties().getTitle();
   }
 
   public Sheet createSheet() {
@@ -68,18 +92,19 @@ public class SheetInstance extends SpreadsheetInstance {
          SheetProperties props = sheetResponse.getProperties();
          result.setProperties(props);
          System.out.println("Result: " + result);
-         System.out.println("Props: " + props);
     }
     catch (IOException io) {
       io.printStackTrace();
       System.exit(1);
     }
 
+    setSheetId(result.getProperties().getSheetId());
     addSheet(result);
     return result;
   }
 
   // Update Sheet Data is not given to List<Sheet> of Spreadsheet
+  // Should confirm that "Sheet" is !null
   public void updateSheet(Request request) {
     List<Request> requests = new ArrayList<>();
     requests.add(request);
@@ -92,13 +117,5 @@ public class SheetInstance extends SpreadsheetInstance {
       io.printStackTrace();
       System.exit(1);
     }
-  }
-
-  public Sheet getSheet() {
-    return sheet;
-  }
-
-  public int getSheetId() {
-    return sheet.getProperties().getSheetId();
   }
 }
