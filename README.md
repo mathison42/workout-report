@@ -25,9 +25,12 @@ Purpose: Create a Google Sheet wrapper for Workout Report Tool
 			- [x] Sheet Template 1 - Exercise x Date
 			- [x] Sheet Template 2* - Tab 1: Day 1 x Date. Tab 2: Day 2 x Date...
 		- [ ] Clean
-  - [ ] Get and Post Class
-		- [ ] Single Values
-		- [ ] Batch Values
+  - [x] Get Class
+		- [x] Single Values
+		- [x] Batch Values
+  - [x] Post Class
+		- [x] Single Values
+		- [x] Batch Values
 - [ ] First JUnit Test
   - [ ] Create First Basic Class Tests
   - [ ] Set Gradle Compile Test
