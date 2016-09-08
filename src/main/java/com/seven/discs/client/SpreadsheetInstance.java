@@ -22,6 +22,7 @@ public class SpreadsheetInstance {
 
   private Sheets service;
   private Spreadsheet spreadsheet;
+  private List<SheetInstance> sheetInstanceList = new ArrayList<SheetInstance>();
 
   public SpreadsheetInstance(Sheets service) {
     this.service = service;
@@ -49,6 +50,29 @@ public class SpreadsheetInstance {
       System.exit(1);
     }
     return result;
+  }
+
+  public List<SheetInstance> getSheetInstances() {
+   return sheetInstanceList;
+  }
+
+  public SheetInstance getSheetInstance(int sheetId) {
+    for (SheetInstance sheetInstance : getSheetInstances()) {
+      if(sheetInstance.getSheetId() == sheetId) {
+        return sheetInstance;
+      }
+    }
+    return null;
+  }
+
+  public void addSheetInstance(SheetInstance sheetInstance) {
+    if (!sheetInstanceList.contains(sheetInstance)) {
+      this.sheetInstanceList.add(sheetInstance);
+    }
+  }
+
+  public void removeSheetInstance(SheetInstance sheetInstance) {
+    this.sheetInstanceList.remove(sheetInstance);
   }
 
   public void setService(Sheets service) {
@@ -119,6 +143,7 @@ public class SpreadsheetInstance {
    return spreadsheet;
   }
 
+
   public ValueRange getValues(String range) {
     ValueRange result = new ValueRange();
     try {
@@ -168,12 +193,9 @@ public class SpreadsheetInstance {
   public BatchUpdateValuesResponse batchUpdateValues(BatchUpdateValuesRequest update) {
     BatchUpdateValuesResponse result = new BatchUpdateValuesResponse();
     try {
-      result = getService().spreadsheets().values()
+      result = service.spreadsheets().values()
           .batchUpdate(getSpreadsheet().getSpreadsheetId(), update)
           .execute();
-      // for (UpdateValuesResponse temp : response.getResponses()) {
-      //   System.out.println ("Response: " + temp);
-      // }
     }
     catch (IOException io) {
       io.printStackTrace();
@@ -181,5 +203,4 @@ public class SpreadsheetInstance {
     }
     return result;
   }
-
 }

@@ -72,4 +72,52 @@ public class BatchUpdateValues {
     add2ValueRange(result);
   }
 
+  public void addExercise(SheetInstance sheet, String exercise, String input) {
+      createValueRangeRequest(sheet, exercise, DateHelper.getTodaysDate(), input);
+      // If exercise is not being added to the "Full Record", add it!
+      if (!sheet.getTitle().equals("Full Record")) {
+          createValueRangeRequest(sheet.getSpreadsheetInstance().getSheetInstance(1), exercise, DateHelper.getTodaysDate(), input);
+      }
+  }
+
+  // Is the Sheet necessary? Always index(0) or "Day Counter"
+  public void addLocation(SheetInstance sheet, String location) {
+      createValueRangeRequest(sheet, "Checked In", DateHelper.getTodaysDate(), "X");
+      createValueRangeRequest(sheet, "Location", DateHelper.getTodaysDate(), location);
+  }
+
+  public void createValueRangeRequest(SheetInstance sheet, String xAxis, String yAxis, String input) {
+    // Generate range
+    // Add date if it doesn't exist, separate into different function
+    int xIndex = sheet.getXAxis().indexOf(xAxis);
+    // Add exercise if it doesn't exist, separate into different function
+    int yIndex = sheet.getYAxis().indexOf(yAxis); //Assume date is in correct format.
+    String range = sheet.getTitle() + "!";
+    range = range + sheet.convertIndex2Column(xIndex);
+    range = range + (yIndex + 1);
+
+    // System.out.println("XAxis: " + sheet.getXAxis());
+    // System.out.println("YAxis: " + sheet.getYAxis());
+    // System.out.println("XAxis: " + xAxis + " : " + xIndex);
+    // System.out.println("yAxis: " + yAxis + " : " + yIndex);
+    // System.out.println("Range: " + range);
+    if (xIndex == -1 || yIndex == -1) {
+      System.out.println("[Error] X or Y Axis was not found. Cannot add " + input
+          + ", when it's coordinates do not exist in the sheet.");
+      System.exit(1);
+    }
+    // Generate List<List<Object>>
+    List<List<Object>> data = new ArrayList<List<Object>>();
+    List<Object> singleData = new ArrayList<Object>();
+    singleData.add(input);
+    data.add(singleData);
+
+    // Generate ValueRange
+    ValueRange result = new ValueRange();
+    result.setMajorDimension("ROWS");
+    result.setRange(range);
+    result.setValues(data);
+    add2ValueRange(result);
+  }
+
 }

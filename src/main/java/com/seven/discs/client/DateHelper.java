@@ -28,6 +28,8 @@ public final class DateHelper {
   public static List<String> getNextXDates(int number) {
     List<String> result = new ArrayList<String>();
     Calendar cal = Calendar.getInstance();
+      cal.add(Calendar.DATE, 0);
+      result.add(sdf.format(cal.getTime()).toString());
     for (int i = 0; i < number; i++) {
       cal.add(Calendar.DATE, 1);
       result.add(sdf.format(cal.getTime()).toString());

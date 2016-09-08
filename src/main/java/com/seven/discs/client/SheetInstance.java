@@ -18,28 +18,28 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SheetInstance extends SpreadsheetInstance {
+public class SheetInstance{
 
-  private int sheetId;
+  private SpreadsheetInstance spreadsheetInstance;
+  private int sheetId = -1;
   private List<Object> xAxis = new ArrayList<Object>();
   private List<Object> yAxis = new ArrayList<Object>();
 
-  public SheetInstance(Sheets service) {
-    super(service);
+  public SheetInstance(SpreadsheetInstance spreadsheetInstance) {
+    this.spreadsheetInstance = spreadsheetInstance;
+    this.spreadsheetInstance.addSheetInstance(this);
   }
 
-  public SheetInstance(Sheets service, Spreadsheet spreadsheet){
-    super(service, spreadsheet);
-  }
-
-  public SheetInstance(Sheets service, Spreadsheet spreadsheet, int sheetId) {
-    super(service, spreadsheet);
+  public SheetInstance(SpreadsheetInstance spreadsheetInstance, int sheetId) {
+    this.spreadsheetInstance = spreadsheetInstance;
     this.sheetId = sheetId;
+    this.spreadsheetInstance.addSheetInstance(this);
   }
 
+  // Make Sheet variable, SpreadsheetInstance updates all of its sheets
   public Sheet getSheet() {
     Sheet result = new Sheet();
-    for (Sheet sheet : getSheets()) {
+    for (Sheet sheet : spreadsheetInstance.getSheets()) {
       SheetProperties props = sheet.getProperties();
       if (props.getSheetId() == sheetId) {
         result = sheet;
@@ -49,6 +49,17 @@ public class SheetInstance extends SpreadsheetInstance {
     return result;
   }
 
+  public SpreadsheetInstance getSpreadsheetInstance() {
+    return spreadsheetInstance;
+  }
+
+  public Spreadsheet getSpreadsheet() {
+    return spreadsheetInstance.getSpreadsheet();
+  }
+
+  public Sheets getService() {
+    return spreadsheetInstance.getService();
+  }
   public int getSheetId() {
     return sheetId;
   }
@@ -103,7 +114,6 @@ public class SheetInstance extends SpreadsheetInstance {
          AddSheetResponse sheetResponse = replies.get(0).getAddSheet();
          SheetProperties props = sheetResponse.getProperties();
          result.setProperties(props);
-         System.out.println("Result: " + result);
     }
     catch (IOException io) {
       io.printStackTrace();
@@ -111,7 +121,8 @@ public class SheetInstance extends SpreadsheetInstance {
     }
 
     setSheetId(result.getProperties().getSheetId());
-    addSheet(result);
+    //spreadsheetInstance.addSheet(result);
+    spreadsheetInstance.addSheetInstance(this);
     return result;
   }
 
@@ -133,14 +144,15 @@ public class SheetInstance extends SpreadsheetInstance {
       io.printStackTrace();
       System.exit(1);
     }
+    spreadsheetInstance.addSheetInstance(this);
     return result;
   }
 
-  public void setAxises() {
+  public void setAxes() {
     BatchGetRanges payload = new BatchGetRanges();
     payload.getXAxisHeader(getTitle());
     payload.getYAxisHeader(getTitle());
-    BatchGetValuesResponse response = batchGetValues(payload.getRanges());
+    BatchGetValuesResponse response = getSpreadsheetInstance().batchGetValues(payload.getRanges());
     this.xAxis = response.getValueRanges().get(0).getValues().get(0);
     List<List<Object>> tempY = response.getValueRanges().get(1).getValues();
     Object header;
@@ -161,9 +173,10 @@ public class SheetInstance extends SpreadsheetInstance {
     return getYAxis().size();
   }
 
-  private String convertIndex2Column(int index) {
+  // Move to general helper class
+  public String convertIndex2Column(int index) {
     String result = "";
-    int resultInt = getXAxis().size() - 1;
+    int resultInt = index;
     int remainder;
     int net;
     while (resultInt >= 0) {
@@ -175,6 +188,7 @@ public class SheetInstance extends SpreadsheetInstance {
     return result;
   }
 
+  // Move to general helper class
   private String getNumber2Char(int i) {
       return i > -1 && i < 26 ? String.valueOf((char)(i + 65)) : null;
   }

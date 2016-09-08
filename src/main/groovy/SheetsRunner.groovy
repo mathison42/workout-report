@@ -18,25 +18,22 @@ public class SheetsRunner {
       println "[Start]..."
       SheetsAuthenticator sa = new SheetsAuthenticator(Application_Name, Data_Store_Dir)
       service = sa.getSheetsService()
-      // SpreadsheetInstance ssi = new SpreadsheetInstance(service)
-      // SheetInstance si = new SheetInstance(service, ssi.getSpreadsheet())
-      // println ssi.getSheets()
-      // SheetInstance newSi = new SheetInstance(service)
+      SpreadsheetInstance ssi = new SpreadsheetInstance(service)
       println "Values: " + SheetTemplate.values();
 
       // Create First Page of new Spreadsheet
-      SheetInstance si1 = new SheetInstance(service)
+      SheetInstance si1 = new SheetInstance(ssi, 0)
       si1.updateSheet(SheetTemplate.DAY_COUNTER.getRequest())
 
       // Create Second Page of previous Spreadsheet
-      SheetInstance si2 = new SheetInstance(service, si1.getSpreadsheet())
+      SheetInstance si2 = new SheetInstance(ssi)
       si2.createSheet(SheetTemplate.FULL_RECORD.getRequest())
 
       // Create Third* Page of previous Spreadsheet
-      SheetInstance si3 = new SheetInstance(service, si1.getSpreadsheet())
+      SheetInstance si3 = new SheetInstance(ssi)
       si3.createSheet(SheetTemplate.DAY_RECORD.getRequest())
 
-      si1.updateSheets();
+      ssi.updateSheets();
       BatchUpdateValues vals = new BatchUpdateValues();
       println "Title1: " + si1.getTitle();
       vals.createXAxisHeader(si1.getTitle(), ["Checked In", "Location"]);
@@ -48,11 +45,11 @@ public class SheetsRunner {
       vals.createXAxisHeader(si3.getTitle(), ["Dumbbell Lunges", "Back Squat", "Front Squat"]);
       vals.createYAxisHeader(si3.getTitle(), DateHelper.getNextXDates(30));
       vals.setValueRange2Request();
-      si1.batchUpdateValues(vals.getRequest());
+      ssi.batchUpdateValues(vals.getRequest());
 
-      si1.setAxises();
-      si2.setAxises();
-      si3.setAxises();
+      si1.setAxes();
+      si2.setAxes();
+      si3.setAxes();
       println "SI1: X: " + si1.getXAxis().toString();
       println "SI1: Y: " + si1.getYAxis().toString();
 
@@ -62,6 +59,14 @@ public class SheetsRunner {
       println si2.getLastYIndex();
       println si3.getLastXIndex();
       println si3.getLastYIndex();
+
+      BatchUpdateValues exerciseVals = new BatchUpdateValues();
+      exerciseVals.addLocation(si1, "Home");
+      exerciseVals.addExercise(si2, "Back Squat", "180x10:190x10:200x10");
+      exerciseVals.addExercise(si3, "Front Squat", "90x10:95x10:100x10");
+      exerciseVals.setValueRange2Request();
+      ssi.batchUpdateValues(exerciseVals.getRequest());
       println "...[End]"
+
     }
   }
