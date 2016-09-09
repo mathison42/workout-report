@@ -1,4 +1,4 @@
-# Google Sheets Workout Report Wrapper
+# Google Sheets Workout Report Wrapper [![Build Status](https://travis-ci.org/mathison42/workout-report-wrapper.svg?branch=master)](https://travis-ci.org/mathison42/workout-report-wrapper)
 
 Purpose: Create a Google Sheet wrapper for Workout Report Tool
 
@@ -36,7 +36,7 @@ Purpose: Create a Google Sheet wrapper for Workout Report Tool
   - [ ] Set Gradle Compile Test
   - [ ] Set Gradle Run Test
 - [ ] Integrate with Travis CI
-  - [ ] Build
+  - [x] Build
   - [ ] Test
 
 ### Future To-Do List:
