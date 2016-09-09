@@ -101,7 +101,7 @@ public class SheetInstance{
 
   public Sheet createSheet(Request request) {
     Sheet result = new Sheet();
-    List<Request> requests = new ArrayList<>();
+    List<Request> requests = new ArrayList<Request>();
     requests.add(request);
     BatchUpdateSpreadsheetRequest update =
             new BatchUpdateSpreadsheetRequest().setRequests(requests);
@@ -130,7 +130,7 @@ public class SheetInstance{
   // Should confirm that "Sheet" is !null
   public BatchUpdateSpreadsheetResponse updateSheet(Request request) {
     BatchUpdateSpreadsheetResponse result = new BatchUpdateSpreadsheetResponse();
-    List<Request> requests = new ArrayList<>();
+    List<Request> requests = new ArrayList<Request>();
     requests.add(request);
     BatchUpdateSpreadsheetRequest update =
             new BatchUpdateSpreadsheetRequest().setRequests(requests);
