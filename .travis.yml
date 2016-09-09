@@ -1,0 +1,10 @@
+language: groovy
+install:
+  gradle check
+script:
+  gradle build
+jdk:
+- oraclejdk8
+- oraclejdk7
+- openjdk7
+- openjdk6
