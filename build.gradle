@@ -3,6 +3,9 @@ apply plugin: 'application'
 
 mainClassName='SheetsRunner'
 
+archivesBaseName = 'workout-sheets-client'
+version = majorVersion + '.' + patch
+
 repositories {
     mavenCentral()
 }
@@ -15,7 +18,7 @@ dependencies {
     compile 'com.google.apis:google-api-services-sheets:v4-rev11-1.22.0'
 
   // Test Dependencies
-  testCompile 'junit:junit:4.11'
+  testCompile 'junit:junit:4.12'
   testCompile 'org.hamcrest:hamcrest-core:1.3'
 
 }
