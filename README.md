@@ -37,8 +37,8 @@ Purpose: Create a Google Sheet wrapper for Workout Report Tool
   - [ ] Set Gradle Run Test
 - [ ] Integrate with Travis CI
   - [x] Build
-  - [ ] Test
-  - [ ] Release
+  - [x] Test
+  - [x] Release
 
 ### Future To-Do List:
 - [ ] Create Organized Workout Spreadsheet

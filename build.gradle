@@ -4,7 +4,10 @@ apply plugin: 'application'
 mainClassName='SheetsRunner'
 
 archivesBaseName = 'workout-sheets-client'
-version = majorVersion + '.' + patch
+
+if (version == "unspecified") {
+  version = majorVersion + "." + patch
+}
 
 repositories {
     mavenCentral()
