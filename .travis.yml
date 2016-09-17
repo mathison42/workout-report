@@ -12,9 +12,9 @@ deploy:
   provider: releases
   api_key:
     secure: gIfu+QE01gcL/2F5mMI83Yc40EhbgIFhA+ufQqsbZAiVOtcUOe25sye8fPrRiKguMgEV5kDGER1IuSH/wEz4Tg8E2MGcHOz0f8XhxKOc/QBGkALtqlOefPmmPBY1bk5BqCYL/2aJdcxWAzXrj5qWjhP0OoUqB+0HyqtSeVgJDuR4URFWDgYK1ugvEYvPfEjrhrG5QjIt553bJXrsTj1Hvry5HB05elYTY1LRp8V3I0QnmvWEObdRCPT7zrWarobEQjqpLc2YNXe8RuN9rAIoRwv6U1Oee5La6lXc2VHdDxMyy7VQaDzbBukopELoK032887ruGiHbeeZdhDMbUwHIFWK8RSC6shLq9oZXgGlTu1fByD7GP6Y1Goe7KaybvJI57u0jYgD+dVtZ7H+bu6UnCSR8+y4OHd3i2+bE6OtSOm2DbKQnVrbq9oUVWZakk5HeOwZPW5vu6MIlGChFcIVtU2A3lzYbNzRJYzVB9JiugvdxbWqn2k1syAcHY992OD6T1U9tVvLByULnPjc/1SWZNLDyb6QslvqRdGBSaiiIROslZTtsK95XPsISqsHyLfv85IxIo/1CcoErYNpeDzLimu0fQKK75drJVuG/p4KMY9RdXE8HEtnFYDnoG+xCkImSpAUVeRDwDRbgBi/B4CwX16YJrEHjZTbw7tnaZJRFW4=
-    file_glob: true
-    file: build/libs/workout-sheets-client-${TRAVIS_TAG}.jar
-    skip_cleanup: true
+  file_glob: true
+  file: build/libs/workout-sheets-client-${TRAVIS_TAG}.jar
+  skip_cleanup: true
   on:
     tags: true
     repo: mathison42/workout-report-wrapper
