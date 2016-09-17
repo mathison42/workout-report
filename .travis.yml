@@ -1,5 +1,5 @@
 language: groovy
-before_script:
+install:
   - gradle check
 script:
   - gradle build -Pversion=${TRAVIS_TAG}
