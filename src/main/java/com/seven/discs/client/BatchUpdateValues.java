@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.seven.discs.helper.A1Conversion;
+
 public class BatchUpdateValues {
 
   private BatchUpdateValuesRequest request;
@@ -93,8 +95,8 @@ public class BatchUpdateValues {
     // Add exercise if it doesn't exist, separate into different function
     int yIndex = sheet.getYAxis().indexOf(yAxis); //Assume date is in correct format.
     String range = sheet.getTitle() + "!";
-    range = range + sheet.convertIndex2Column(xIndex);
-    range = range + (yIndex + 1);
+    range = range + A1Conversion.getA1XConversion(xIndex);
+    range = range + A1Conversion.getA1YConversion(yIndex);
 
     // System.out.println("XAxis: " + sheet.getXAxis());
     // System.out.println("YAxis: " + sheet.getYAxis());

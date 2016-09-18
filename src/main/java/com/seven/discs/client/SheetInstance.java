@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.seven.discs.helper.A1Conversion;
+
 public class SheetInstance{
 
   private SpreadsheetInstance spreadsheetInstance;
@@ -165,31 +167,19 @@ public class SheetInstance{
     }
   }
 
+  /**
+   * return Retrieves the last X Index in A1 Notation
+   */
   public String getLastXIndex() {
-    return convertIndex2Column(getXAxis().size());
+    int xSize = getXAxis().size();
+    if (xSize == 0) return "";
+    return A1Conversion.getA1XConversion(xSize-1);
   }
 
+  /**
+   * return Retrieves the last Y Index in A1 Notation
+   */
   public int getLastYIndex() {
     return getYAxis().size();
-  }
-
-  // Move to general helper class
-  public String convertIndex2Column(int index) {
-    String result = "";
-    int resultInt = index;
-    int remainder;
-    int net;
-    while (resultInt >= 0) {
-      remainder = resultInt % 26;
-      result = getNumber2Char(remainder) + result;
-      net = resultInt - remainder;
-      resultInt = net / 26 - 1;
-    }
-    return result;
-  }
-
-  // Move to general helper class
-  private String getNumber2Char(int i) {
-      return i > -1 && i < 26 ? String.valueOf((char)(i + 65)) : null;
   }
 }
