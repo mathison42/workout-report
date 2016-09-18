@@ -23,6 +23,7 @@ import com.seven.discs.helper.A1Conversion;
 public class SheetInstance{
 
   private SpreadsheetInstance spreadsheetInstance;
+  private Sheet sheet;
   private int sheetId = -1;
   private List<Object> xAxis = new ArrayList<Object>();
   private List<Object> yAxis = new ArrayList<Object>();
@@ -38,17 +39,25 @@ public class SheetInstance{
     this.spreadsheetInstance.addSheetInstance(this);
   }
 
-  // Make Sheet variable, SpreadsheetInstance updates all of its sheets
   public Sheet getSheet() {
+    return sheet;
+  }
+
+  public void setSheet(Sheet sheet) {
+    this.sheet = sheet;
+  }
+
+  public void updateSheet() {
     Sheet result = new Sheet();
-    for (Sheet sheet : spreadsheetInstance.getSheets()) {
+    for (Sheet sheet : spreadsheetInstance.getSpreadsheet().getSheets()) {
       SheetProperties props = sheet.getProperties();
       if (props.getSheetId() == sheetId) {
         result = sheet;
         break;
       }
     }
-    return result;
+    setSheet(result);
+    setAxes();
   }
 
   public SpreadsheetInstance getSpreadsheetInstance() {
@@ -62,10 +71,13 @@ public class SheetInstance{
   public Sheets getService() {
     return spreadsheetInstance.getService();
   }
+
+  // Pull from sheet object
   public int getSheetId() {
     return sheetId;
   }
 
+  // Eventually remove for setSheet(Sheet sheet)
   public void setSheetId(int sheetId) {
     this.sheetId = sheetId;
   }
@@ -82,7 +94,10 @@ public class SheetInstance{
     return this.yAxis;
   }
 
-  public Sheet createSheet() {
+  /**
+   * return Generates generic Sheet/tab
+   */
+  public void createSheet() {
     Request tempReq = new Request()
       .setAddSheet(new AddSheetRequest()
         .setProperties(new SheetProperties()
@@ -98,10 +113,14 @@ public class SheetInstance{
           )
         )
       );
-    return createSheet(tempReq);
+    createSheet(tempReq);
   }
 
-  public Sheet createSheet(Request request) {
+  /**
+   * param request Request containing the setAddSheet property set
+   * return Generates generic Spreadsheet Sheet/tab
+   */
+  public void createSheet(Request request) {
     Sheet result = new Sheet();
     List<Request> requests = new ArrayList<Request>();
     requests.add(request);
@@ -124,13 +143,14 @@ public class SheetInstance{
 
     setSheetId(result.getProperties().getSheetId());
     //spreadsheetInstance.addSheet(result);
+    System.out.println ("Output: " + result);
+    setSheet(result);
     spreadsheetInstance.addSheetInstance(this);
-    return result;
   }
 
   // Update Sheet Data is not given to List<Sheet> of Spreadsheet
   // Should confirm that "Sheet" is !null
-  public BatchUpdateSpreadsheetResponse updateSheet(Request request) {
+  public BatchUpdateSpreadsheetResponse updateSheetProps(Request request) {
     BatchUpdateSpreadsheetResponse result = new BatchUpdateSpreadsheetResponse();
     List<Request> requests = new ArrayList<Request>();
     requests.add(request);
@@ -138,33 +158,51 @@ public class SheetInstance{
             new BatchUpdateSpreadsheetRequest().setRequests(requests);
     try {
         result = getService().spreadsheets()
-          .batchUpdate(getSpreadsheet()
-          .getSpreadsheetId(), update)
+          .batchUpdate(getSpreadsheet().getSpreadsheetId(), update)
           .execute();
     }
     catch (IOException io) {
       io.printStackTrace();
       System.exit(1);
     }
-    spreadsheetInstance.addSheetInstance(this);
     return result;
   }
 
+  /**
+   * return Retrieves the Axes from Sheet, and places them into their associated instance variables
+   * Reset to empty if no values are found.
+   */
   public void setAxes() {
     BatchGetRanges payload = new BatchGetRanges();
     payload.getXAxisHeader(getTitle());
     payload.getYAxisHeader(getTitle());
-    BatchGetValuesResponse response = getSpreadsheetInstance().batchGetValues(payload.getRanges());
-    this.xAxis = response.getValueRanges().get(0).getValues().get(0);
-    List<List<Object>> tempY = response.getValueRanges().get(1).getValues();
-    Object header;
-    for (List<Object> temp : tempY) {
-      header = "";
-      if(temp.size() > 0 ) {
-        header = temp.get(0);
-      }
-      this.yAxis.add(header);
+    BatchGetValuesResponse response = getSpreadsheetInstance()
+          .batchGetValues(payload.getRanges());
+
+    // Get X Axis
+    List<List<Object>> tempX = response.getValueRanges().get(0).getValues();
+    List<Object> xResult = new ArrayList<Object>();
+    if(tempX != null && tempX.size() > 0) {
+      xResult = tempX.get(0);
     }
+
+    // Get Y Axis
+    List<List<Object>> tempY = response.getValueRanges().get(1).getValues();
+    List<Object> yResult = new ArrayList<Object>();
+    if(tempY != null && tempY.size() > 0) {
+      Object header;
+      for (List<Object> temp : tempY) {
+        header = "";
+        if(temp.size() > 0 ) {
+          header = temp.get(0);
+        }
+        yResult.add(header);
+      }
+    }
+
+    // Set Axes
+    this.xAxis = xResult;
+    this.yAxis = yResult;
   }
 
   /**

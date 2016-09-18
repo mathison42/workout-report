@@ -23,7 +23,7 @@ public class SheetsRunner {
 
       // Create First Page of new Spreadsheet
       SheetInstance si1 = new SheetInstance(ssi, 0)
-      si1.updateSheet(SheetTemplate.DAY_COUNTER.getRequest())
+      si1.updateSheetProps(SheetTemplate.DAY_COUNTER.getRequest())
 
       // Create Second Page of previous Spreadsheet
       SheetInstance si2 = new SheetInstance(ssi)
@@ -33,6 +33,7 @@ public class SheetsRunner {
       SheetInstance si3 = new SheetInstance(ssi)
       si3.createSheet(SheetTemplate.DAY_RECORD.getRequest())
 
+      ssi.updateSpreadsheet();
       ssi.updateSheets();
       BatchUpdateValues vals = new BatchUpdateValues();
       println "Title1: " + si1.getTitle();

@@ -17,24 +17,30 @@ Purpose: Create a Google Sheet wrapper for Workout Report Tool
   - [x] Short Summary on how to use Runner.groovy
 - [ ] Create Sheets Wrapper Classes
   - [x] Authorization Class
-  - [ ] Spreadsheet Creation Class
+  - [x] Spreadsheet Creation Class
 		- [x] Create Blank Spreadsheet
 			- [x] Spreadsheet Template 1 - Days "Checked In"
 		- [x] Create Blank Tab
 		- [x] Create Generic Templates
 			- [x] Sheet Template 1 - Exercise x Date
 			- [x] Sheet Template 2* - Tab 1: Day 1 x Date. Tab 2: Day 2 x Date...
-		- [ ] Clean
   - [x] Get Class
 		- [x] Single Values
 		- [x] Batch Values
   - [x] Post Class
 		- [x] Single Values
 		- [x] Batch Values
+- [ ] Clean
 - [ ] First JUnit Test
-  - [ ] Create First Basic Class Tests
-  - [ ] Set Gradle Compile Test
-  - [ ] Set Gradle Run Test
+  - [ ] Create Basic Tests
+		- [x] A1 Notation Conversion
+		- [ ] Generating Spreadsheet and Sheets
+		- [ ] Updating Spreadsheet and Sheets
+		- [ ] Login Credentials
+		- [ ] Get Values
+		- [ ] Post Values
+  - [x] Set Gradle Compile Test
+  - [x] Set Gradle Run Test
 - [ ] Integrate with Travis CI
   - [x] Build
   - [x] Test

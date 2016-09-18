@@ -24,16 +24,26 @@ public class SpreadsheetInstance {
   private Spreadsheet spreadsheet;
   private List<SheetInstance> sheetInstanceList = new ArrayList<SheetInstance>();
 
+  /**
+   * param service Google Sheets containing connection and credential information
+   */
   public SpreadsheetInstance(Sheets service) {
     this.service = service;
     this.spreadsheet = createSpreadsheet();
   }
 
+  /**
+   * param service Google Sheets containing connection and credential information
+   * param spreadsheet Connect this SpreadsheetInstance to a Google Spreadsheet
+   */
   public SpreadsheetInstance(Sheets service, Spreadsheet spreadsheet) {
     this.service = service;
     this.spreadsheet = spreadsheet;
   }
 
+ /**
+  * return Generates a Google Spreadsheet. Only called in SpreadsheetInstance(Sheets)
+  */
   private Spreadsheet createSpreadsheet() {
     Spreadsheet result = new Spreadsheet();
     Spreadsheet genericTemplate = new Spreadsheet();
@@ -52,10 +62,17 @@ public class SpreadsheetInstance {
     return result;
   }
 
+  /**
+   * return SheetIntance list of all objects monitored by this spreadsheetInstance
+   */
   public List<SheetInstance> getSheetInstances() {
    return sheetInstanceList;
   }
 
+  /**
+   * param sheetId The SheetInstance id used to identify the Spreadsheet's tabs
+   * return The identified SheetInstance, else null if not found
+   */
   public SheetInstance getSheetInstance(int sheetId) {
     for (SheetInstance sheetInstance : getSheetInstances()) {
       if(sheetInstance.getSheetId() == sheetId) {
@@ -65,85 +82,83 @@ public class SpreadsheetInstance {
     return null;
   }
 
+  /**
+   * param sheetInstance SheetInstance object to add to the SpreadsheetInstance's List
+   * return List<SpreadsheetInstance> contains the new SheetInstance, unless already found
+   */
   public void addSheetInstance(SheetInstance sheetInstance) {
     if (!sheetInstanceList.contains(sheetInstance)) {
       this.sheetInstanceList.add(sheetInstance);
     }
   }
 
+  /**
+   * return Remove a SheetInstance from the List<SpradsheetInstance>
+   */
   public void removeSheetInstance(SheetInstance sheetInstance) {
     this.sheetInstanceList.remove(sheetInstance);
   }
 
+  /**
+   * param service The Google Sheets service for connection and credentials
+   * return Sets the instances's service parameter
+   */
   public void setService(Sheets service) {
     this.service = service;
   }
 
+ /**
+  * return Retreives the instance's Google Sheets service
+  */
   public Sheets getService() {
    return service;
   }
 
-  public void setSheets(List<Sheet> paramList) {
-    spreadsheet.setSheets(paramList);
+  /**
+   * param spreadsheet New instance's spreadsheet
+   * return Setter for Spreadsheet variable
+   */
+  public void setSpreadsheet(Spreadsheet spreadsheet) {
+    this.spreadsheet = spreadsheet;
   }
 
-  public List<Sheet> getSheets() {
-    return spreadsheet.getSheets();
+  /**
+   * return Retreive instance's Spreadsheet Object
+   */
+  public Spreadsheet getSpreadsheet() {
+   return spreadsheet;
   }
 
-  public void updateSheets() {
-    List<Sheet> sheetList = new ArrayList<Sheet>();
+  /**
+   * return Update Spreadsheet with current data
+   */
+  public void updateSpreadsheet() {
     try {
-        Spreadsheet s = getService().spreadsheets()
-          .get(getSpreadsheet().getSpreadsheetId())
-          .setFields("sheets")
-          .execute();
-        sheetList = s.getSheets();
+      Spreadsheet result = getService().spreadsheets()
+      .get(getSpreadsheet().getSpreadsheetId())
+      .execute();
+      setSpreadsheet(result);
     }
     catch (IOException io) {
       io.printStackTrace();
       System.exit(1);
     }
-    setSheets(sheetList);
   }
 
-  public void addSheet(Sheet sheet) {
-    int sheetId = sheet.getProperties().getSheetId();
-    int i = 0;
-    boolean found = false;
-    List<Sheet> sheets = getSheets();
-    // Replace if it exists in our local list
-    for (Sheet temp : sheets) {
-      if (temp.getProperties().getSheetId() == sheetId) {
-        sheets.set(i,sheet);
-        found = true;
-        break;
-      }
-      i++;
+  /**
+   * return Update all Sheets with current data
+   */
+  public void updateSheets() {
+    for (SheetInstance si : getSheetInstances()) {
+      si.updateSheet();
     }
-
-    // If it doesn't exist in our local list, add it.
-    if (!found) {
-      sheets.add(sheet);
-    }
-    setSheets(sheets);
   }
 
-  public void removeSheet(Sheet sheet) {
-    List<Sheet> sheets = getSheets();
-    sheets.remove(sheet);
-    setSheets(sheets);
-  }
-
-  public void setSpreadsheet(Spreadsheet spreadsheet) {
-    this.spreadsheet = spreadsheet;
-  }
-
-  public Spreadsheet getSpreadsheet() {
-   return spreadsheet;
-  }
-
-
+  /**
+   * param range Single A1 Notation range
+   * return Retreives ValueRange which contain the values from the given range
+   */
+  // Move into different class
   public ValueRange getValues(String range) {
     ValueRange result = new ValueRange();
     try {
@@ -158,7 +173,11 @@ public class SpreadsheetInstance {
     return result;
   }
 
-  // Get Values within a Spreadsheet
+  /**
+   * param range List of A1 Notation ranges
+   * return Retreives List of ValueRanges which contain the values from the given ranges
+   */
+  // Move into different class
   public BatchGetValuesResponse batchGetValues(List<String> ranges) {
     BatchGetValuesResponse result = new BatchGetValuesResponse();
     try {
@@ -174,6 +193,12 @@ public class SpreadsheetInstance {
     return result;
   }
 
+  /**
+   * param range Single A1 Notation range
+   * param valueRange Single ValueRange containing new values
+   * return Updates sheet with new ValueRange. Retreives response containing update status
+   */
+  // Move into different class
   public UpdateValuesResponse updateValues(String range, ValueRange valueRange) {
     UpdateValuesResponse result = new UpdateValuesResponse();
     try {
@@ -189,7 +214,12 @@ public class SpreadsheetInstance {
     return result;
   }
 
-  // Update Values within a Spreadsheet
+  /**
+   * param range List of A1 Notation ranges
+   * param valueRange List of ValueRanges containing new values
+   * return Updates sheets with new ValueRanges. Retreives response containing update statuses
+   */
+  // Move into different class
   public BatchUpdateValuesResponse batchUpdateValues(BatchUpdateValuesRequest update) {
     BatchUpdateValuesResponse result = new BatchUpdateValuesResponse();
     try {
