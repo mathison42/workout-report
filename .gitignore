@@ -1,5 +1,7 @@
 .gradle
 .project
+gradlew
+gradle.bat
 /gradle
 /build
 /lib
