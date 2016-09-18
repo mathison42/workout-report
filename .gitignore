@@ -1,8 +1,19 @@
+# Maintain Travis File
+!.travis.yml
+
+# Maintain Git Files
+!.git*
+!.gitignore
+
+# Gradle Files and Folders
 .gradle
-.project
-gradlew
-gradle.bat
 /gradle
+gradlew
+gradlew.bat
+
+# Build Files and Folders
 /build
 /lib
+
+# Google Sheets Secret_Client (Shhh...)
 /src/main/resources/client_secret.json
